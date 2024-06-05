@@ -2,7 +2,9 @@ package com.cadastro.aluno_api.controller;
 
 import com.cadastro.aluno_api.model.Aluno;
 import com.cadastro.aluno_api.service.AlunoService;
+import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -16,9 +18,13 @@ public class AlunoController {
     private AlunoService alService;
 
     @PostMapping("/save")
-    public ResponseEntity<Aluno> insert(@RequestBody Aluno alunoNew){
-        Aluno alunoNewData = alService.salvarAluno(alunoNew);
-        return ResponseEntity.ok().body(alunoNewData);
+    public ResponseEntity<?> insert(@RequestBody Aluno alunoNew){
+        try {
+            Aluno alunoNewData = alService.salvarAluno(alunoNew);
+            return ResponseEntity.ok().body(alunoNewData);
+        }catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ExceptionUtils.getMessage(e));
+        }
     }
 
    /* @GetMapping("/alunos")
@@ -26,6 +32,13 @@ public class AlunoController {
 
         return ResponseEntity.ok(alService.buscaTodosProdutos());
     }*/
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Aluno> getAluno(@PathVariable("id") String id){
+        return ResponseEntity.status(HttpStatus.OK).body(alService.findById(id));
+
+    }
+
 
 
     @DeleteMapping("/{id}")
@@ -38,5 +51,8 @@ public class AlunoController {
     public List<Aluno> getAll() {
         return alService.findAll();
     }
+
+
+
 }
 
