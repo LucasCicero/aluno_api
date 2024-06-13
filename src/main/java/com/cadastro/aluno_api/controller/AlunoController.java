@@ -2,6 +2,7 @@ package com.cadastro.aluno_api.controller;
 
 import com.cadastro.aluno_api.model.Aluno;
 import com.cadastro.aluno_api.service.AlunoService;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@Slf4j
 @RequestMapping("/api/alunos")
 public class AlunoController {
 
@@ -49,6 +51,7 @@ public class AlunoController {
 
     @GetMapping("/all")
     public List<Aluno> getAll() {
+        log.info("Início seleciona todos os alunos");
         return alService.findAll();
     }
 

@@ -5,6 +5,7 @@ import com.cadastro.aluno_api.exceptions.AlunoJaExisteException;
 import com.cadastro.aluno_api.model.Aluno;
 import com.cadastro.aluno_api.model.dto.EnderecoDTO;
 import com.cadastro.aluno_api.repository.AlunoRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 @Service
+@Slf4j
 public class AlunoService {
 
     @Autowired
@@ -28,7 +30,9 @@ public class AlunoService {
     public Aluno salvarAluno(Aluno alunoNew){
 
         if (ar.findAlunoByCpf(alunoNew.getCpf()) != null) {
+            log.error("Aluno já existe na base de dados");
             throw new AlunoJaExisteException("Já existe um aluno cadastrado com o CPF: " + alunoNew.getCpf());
+
         }
 
 
