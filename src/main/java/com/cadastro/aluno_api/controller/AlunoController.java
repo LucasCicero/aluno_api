@@ -5,6 +5,7 @@ import com.cadastro.aluno_api.service.AlunoService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -19,7 +20,7 @@ public class AlunoController {
     @Autowired
     private AlunoService alService;
 
-    @PostMapping("/save")
+    @PostMapping("/salvar")
     public ResponseEntity<?> insert(@RequestBody Aluno alunoNew){
         try {
             Aluno alunoNewData = alService.salvarAluno(alunoNew);
@@ -41,7 +42,20 @@ public class AlunoController {
 
     }
 
+    @GetMapping("/buscaNomeOuCpf")
+    public Page<Aluno> search(
+            @RequestParam("searchTerm") String searchTerm,
+            @RequestParam(
+                    value = "page",
+                    required = false,
+                    defaultValue = "0") int page,
+            @RequestParam(
+                    value = "size",
+                    required = false,
+                    defaultValue = "10") int size) {
+        return alService.findByNomeOrCpf(searchTerm, page, size);
 
+    }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Aluno> delete(@PathVariable("id") String id){
@@ -49,8 +63,8 @@ public class AlunoController {
         return ResponseEntity.noContent().build();
     }
 
-    @GetMapping("/all")
-    public List<Aluno> getAll() {
+    @GetMapping("/buscarTodos")
+    public Page<Aluno> getAll() {
         log.info("Início seleciona todos os alunos");
         return alService.findAll();
     }

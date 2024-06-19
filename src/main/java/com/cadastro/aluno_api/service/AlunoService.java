@@ -7,6 +7,10 @@ import com.cadastro.aluno_api.model.dto.EnderecoDTO;
 import com.cadastro.aluno_api.repository.AlunoRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import com.cadastro.aluno_api.exceptions.AlunoNotFoundException;
@@ -63,9 +67,32 @@ public class AlunoService {
     }
 
 
-    public List<Aluno> findAll(){
-        // return (List<Aluno>) ar.findAll();
-        return ar.findAll();
+    public Page<Aluno> findAll(){
+        int page = 0;
+        int size = 10;
+        PageRequest pageRequest = PageRequest.of(
+                page,
+                size,
+                Sort.Direction.ASC,
+                "nome");
+        return new PageImpl<>(
+                ar.findAll(),
+                pageRequest, size);
     }
+
+
+
+    public Page<Aluno> findByNomeOrCpf(String searchTerm, int page, int size){
+        PageRequest pageRequest = PageRequest.of(
+                page,
+                size,
+                Sort.Direction.ASC,
+                "nome");
+        return ar.findByNomeOrCidade(searchTerm.toLowerCase(),
+                pageRequest);
+
+    }
+
+    //pesquisa por data de ultima alteração
 }
 

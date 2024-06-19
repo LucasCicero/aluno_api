@@ -9,6 +9,7 @@ import com.opencsv.ICSVWriter;
 import jakarta.servlet.http.Cookie;
 import org.hibernate.service.spi.InjectService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -32,7 +33,7 @@ public class DownloadFileService {
 
     public ResponseEntity<?> gerarArquivo(HttpServletRequest request,HttpServletResponse response) throws IOException{
         try {
-            List<Aluno> listaAlunos= alunoService.findAll();
+            Page<Aluno> listaAlunos= alunoService.findAll();
 
             if (listaAlunos==null || listaAlunos.isEmpty()){
                 throw new AlunoNotFoundException();
